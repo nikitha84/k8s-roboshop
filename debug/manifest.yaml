@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Pod
+metadata:
+ name: debug
+ namespce: roboshop
+ labels:
+  name: debug
+  project: roboshop
+spec:
+  containers:
+  - name: debug
+    image: niktha/debug:v1
+    imagePullPolicy: Always
+#kubectl apply
+#kubectl exec -it  debug -- bash
+#telnet mongodb 27017
+#connnected

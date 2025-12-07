@@ -1,0 +1,70 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: nginx
+ namespace: roboshop
+ labels:
+    project: roboshop
+    environment: dev
+    componet: catalogue
+    tier: backend
+spec:
+  replicas: 1
+  selectore:
+    matchLabels:
+      project: roboshop
+      environment: dev
+      componet: catalogue
+      tier: backend 
+template:
+  matadata:
+    labels:
+      project: roboshop
+      environment: dev
+      componet: catalogue
+      tier: backend 
+  spec:
+    containers:
+    - name: catalogue
+      image: nikitha84/catalogue:v1 
+      imagePullPolicy: Always
+      ports:
+      - name: liveness-port
+        containerPort: 8080
+      livenessProbe:
+        httpGet:
+          path: /healthz
+          port: liveness-port
+        failureThreshold: 1
+        periodSeconds: 15
+      readinessProbe:
+        httpGet:
+          path: /healthz
+          port: liveness-port
+        failureThreshold: 1
+        periodSeconds: 15
+
+---   
+apiVersion: v1
+kins: Service
+metadata:
+  name: catalogue
+  namespace: roboshop
+spec:
+  selector:
+    project: roboshop
+    environment: dev
+    componet: catalogue
+    tier: backend
+  ports:
+    - protocol: TCP
+      ports: 8080
+      targetPort: 8080  
+
+#kubetl apply
+#kubetl get pods
+#kubetl exec -it debug -- bash'
+#telnet catalogue 8080=connected
+#curl http://catalogue:8080/health = mongo=true
+#nslookup catalogue
+
