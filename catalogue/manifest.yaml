@@ -1,52 +1,46 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
- name: nginx
+ name: catalogue
  namespace: roboshop
  labels:
     project: roboshop
     environment: dev
-    componet: catalogue
-    tier: backend
+    component: catalogue
+    tier: db
 spec:
   replicas: 1
-  selectore:
+  selector:
     matchLabels:
       project: roboshop
       environment: dev
-      componet: catalogue
-      tier: backend 
-template:
-  matadata:
-    labels:
-      project: roboshop
-      environment: dev
-      componet: catalogue
-      tier: backend 
-  spec:
-    containers:
-    - name: catalogue
-      image: nikitha84/catalogue:v1 
-      imagePullPolicy: Always
-      ports:
-      - name: liveness-port
-        containerPort: 8080
-      livenessProbe:
-        httpGet:
-          path: /healthz
-          port: liveness-port
-        failureThreshold: 1
-        periodSeconds: 15
-      readinessProbe:
-        httpGet:
-          path: /healthz
-          port: liveness-port
-        failureThreshold: 1
-        periodSeconds: 15
-
----   
+      component: catalogue
+      tier: db 
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        environment: dev
+        component: catalogue
+        tier: db 
+    spec:
+      containers:
+      - name: catalogue
+        image: nikitha84/catalogue:v1
+        imagePullPolicy: Always
+        readinessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 10 
+          periodSeconds: 10
+        livenessProbe:
+          tcpSocket:
+            port: 27017
+          initialDelaySeconds: 5
+          periodSeconds: 5
+---
 apiVersion: v1
-kins: Service
+kind: Service
 metadata:
   name: catalogue
   namespace: roboshop
@@ -54,12 +48,18 @@ spec:
   selector:
     project: roboshop
     environment: dev
-    componet: catalogue
-    tier: backend
+    component: catalogue
+    tier: db 
   ports:
-    - protocol: TCP
-      ports: 8080
-      targetPort: 8080  
+  - protocol: TCP
+    port: 27017
+    targetPort: 27017  
+
+
+
+
+
+
 
 #kubetl apply
 #kubetl get pods
