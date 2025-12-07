@@ -48,11 +48,14 @@ spec:
   selector:
     project: roboshop
     environment: dev
-    componet: mongodb
+    component: mongodb
     tier: db 
   ports:
   - protocol: TCP
     ports: 27017
     targetPort: 27017  
+
+
+
 
 
