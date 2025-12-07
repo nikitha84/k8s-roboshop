@@ -9,7 +9,7 @@ metadata:
 spec:
   containers:
   - name: debug
-    image: niktha84/debug:v1
+    image: nikitha84/debug:v1
     imagePullPolicy: Always
 #kubectl apply
 #kubectl exec -it  debug -- bash
