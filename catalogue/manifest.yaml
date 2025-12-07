@@ -28,16 +28,22 @@ spec:
       - name: catalogue
         image: nikitha84/catalogue:v1
         imagePullPolicy: Always
+        ports:
+        - name: liveness-port
+          containerPort: 8080
         readinessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 10 
-          periodSeconds: 10
+          httpGet:
+            path: /healthz
+            port: liveness-port
+          failureThreshold: 1
+          periodSeconds: 15
         livenessProbe:
-          tcpSocket:
-            port: 8080
-          initialDelaySeconds: 5
-          periodSeconds: 5
+          httpGet:
+            path: /healthz
+            port: liveness-port
+          failureThreshold: 1
+          periodSeconds: 15 #this is catalogue work on http
+    
 ---
 apiVersion: v1
 kind: Service
