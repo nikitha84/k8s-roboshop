@@ -30,12 +30,12 @@ spec:
         imagePullPolicy: Always
         readinessProbe:
           tcpSocket:
-            port: 27017
+            port: 8080
           initialDelaySeconds: 10 
           periodSeconds: 10
         livenessProbe:
           tcpSocket:
-            port: 27017
+            port: 8080
           initialDelaySeconds: 5
           periodSeconds: 5
 ---
